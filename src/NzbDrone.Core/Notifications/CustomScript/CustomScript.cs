@@ -6,6 +6,7 @@ using FluentValidation.Results;
 using NLog;
 using NzbDrone.Common.Disk;
 using NzbDrone.Common.Processes;
+using NzbDrone.Core.HealthCheck;
 using NzbDrone.Core.Music;
 using NzbDrone.Core.Validation;
 
@@ -146,6 +147,19 @@ namespace NzbDrone.Core.Notifications.CustomScript
             environmentVariables.Add("Lidarr_Artist_Path", artist.Path);
             environmentVariables.Add("Lidarr_Artist_MBId", artist.Metadata.Value.ForeignArtistId);
             environmentVariables.Add("Lidarr_Artist_Type", artist.Metadata.Value.Type);
+
+            ExecuteScript(environmentVariables);
+        }
+
+        public override void OnHealthIssue(HealthCheck.HealthCheck healthCheck)
+        {
+            var environmentVariables = new StringDictionary();
+
+            environmentVariables.Add("Lidarr_EventType", "HealthIssue");
+            environmentVariables.Add("Lidarr_Health_Issue_Level", nameof(healthCheck.Type));
+            environmentVariables.Add("Lidarr_Health_Issue_Message", healthCheck.Message);
+            environmentVariables.Add("Lidarr_Health_Issue_Type", healthCheck.Source.Name);
+            environmentVariables.Add("Lidarr_Health_Issue_Wiki", healthCheck.WikiUrl.ToString() ?? string.Empty);
 
             ExecuteScript(environmentVariables);
         }
