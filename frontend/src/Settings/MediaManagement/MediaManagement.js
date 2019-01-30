@@ -24,6 +24,13 @@ const allowFingerprintingOptions = [
   { key: 'never', value: 'Never' }
 ];
 
+const writeAudioTagOptions = [
+  { key: 'sync', value: 'All files; keep in sync with MusicBrainz' },
+  { key: 'allFiles', value: 'All files; initial import only' },
+  { key: 'newFiles', value: 'For new downloads only' },
+  { key: 'no', value: 'Never' }
+];
+
 const fileDateOptions = [
   { key: 'none', value: 'None' },
   { key: 'albumReleaseDate', value: 'Album Release Date' }
@@ -264,6 +271,35 @@ class MediaManagement extends Component {
                       {...settings.fileDate}
                     />
                   </FormGroup>
+
+                  <FormGroup>
+                    <FormLabel>Write Metadata Tags</FormLabel>
+
+                    <FormInputGroup
+                      type={inputTypes.SELECT}
+                      name="writeAudioTags"
+                      helpText="Write metadata to the music file tags"
+                      helpTextWarning="Selecting 'Always' will alter existing files when they are imported."
+                      values={writeAudioTagOptions}
+                      onChange={onInputChange}
+                      {...settings.writeAudioTags}
+                    />
+                  </FormGroup>
+
+                  {
+                    settings.writeAudioTags.value !== 'no' &&
+                      <FormGroup>
+                        <FormLabel>Scrub Metadata Tags</FormLabel>
+
+                        <FormInputGroup
+                          type={inputTypes.CHECK}
+                          name="scrubAudioTags"
+                          helpText="Remove existing tags from files, leaving only those added by Lidarr."
+                          onChange={onInputChange}
+                          {...settings.scrubAudioTags}
+                        />
+                      </FormGroup>
+                  }
 
                   <FormGroup
                     advancedSettings={advancedSettings}

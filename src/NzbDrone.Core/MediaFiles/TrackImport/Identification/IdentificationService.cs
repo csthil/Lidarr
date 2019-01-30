@@ -184,7 +184,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
 
             var allTracks = _trackService.GetTracksByReleases(candidateReleases.Select(x => x.Id).ToList());
 
-            _logger.Debug($"Got tracks in {watch.ElapsedMilliseconds}ms");
+            _logger.Debug($"Retrieved {allTracks.Count} possible tracks in {watch.ElapsedMilliseconds}ms");
             
             GetBestRelease(localAlbumRelease, candidateReleases, allTracks);
 
@@ -228,7 +228,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
             if (releaseIds.Count == 1 && releaseIds[0].IsNotNullOrWhiteSpace())
             {
                 _logger.Debug("Selecting release from consensus ForeignReleaseId [{0}]", releaseIds[0]);
-                return _releaseService.GetReleasesByForeignReleaseId(releaseIds);
+                return new List<AlbumRelease> { _releaseService.GetReleaseByForeignReleaseId(releaseIds[0]) };
             }
 
             if (release != null)
@@ -513,7 +513,7 @@ namespace NzbDrone.Core.MediaFiles.TrackImport.Identification
                 if (country != null)
                 {
                     dist.AddEquality("country", country.Name, release.Country);
-                    _logger.Trace("country: {0} vs {1}; {2}", country, string.Join(", ", release.Country), dist.NormalizedDistance());
+                    _logger.Trace("country: {0} vs {1}; {2}", country.Name, string.Join(", ", release.Country), dist.NormalizedDistance());
                 }
                 else if (preferredCountries.Count > 0)
                 {

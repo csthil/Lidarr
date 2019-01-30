@@ -40,17 +40,24 @@ class OrganizePreviewModalContentConnector extends Component {
   // Lifecycle
 
   componentDidMount() {
+    this.props.fetchNamingSettings();
+  }
+
+  componentDidUpdate() {
     const {
       artistId,
-      albumId
+      albumId,
+      renameTracks,
+      isPopulated,
+      isFetching
     } = this.props;
 
-    this.props.fetchOrganizePreview({
-      artistId,
-      albumId
-    });
-
-    this.props.fetchNamingSettings();
+    if (renameTracks && !isPopulated && !isFetching) {
+      this.props.fetchOrganizePreview({
+        artistId,
+        albumId
+      });
+    }
   }
 
   //

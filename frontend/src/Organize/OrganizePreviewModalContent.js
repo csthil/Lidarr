@@ -106,18 +106,18 @@ class OrganizePreviewModalContent extends Component {
           }
 
           {
-            !isFetching && isPopulated && !items.length &&
+            !isFetching && ((isPopulated && !items.length) || !renameTracks) &&
               <div>
                 {
                   renameTracks ?
                     <div>Success! My work is done, no files to rename.</div> :
-                    <div>Renaming is disabled, nothing to rename</div>
+                    <div>Renaming is disabled, nothing to rename.</div>
                 }
               </div>
           }
 
           {
-            !isFetching && isPopulated && !!items.length &&
+            !isFetching && isPopulated && !!items.length && renameTracks &&
               <div>
                 <Alert>
                   <div>
@@ -157,7 +157,7 @@ class OrganizePreviewModalContent extends Component {
 
         <ModalFooter>
           {
-            isPopulated && !!items.length &&
+            isPopulated && !!items.length && renameTracks &&
               <CheckInput
                 className={styles.selectAllInput}
                 containerClassName={styles.selectAllInputContainer}
@@ -176,6 +176,7 @@ class OrganizePreviewModalContent extends Component {
           <Button
             kind={kinds.PRIMARY}
             onPress={this.onOrganizePress}
+            isDisabled={!renameTracks}
           >
             Organize
           </Button>
