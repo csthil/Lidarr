@@ -173,6 +173,8 @@ namespace NzbDrone.Core.MediaFiles.TrackImport
                 catch (UnauthorizedAccessException e)
                 {
                     _logger.Warn(e, "Couldn't import track " + localTrack);
+                    _eventAggregator.PublishEvent(new TrackImportFailedEvent(e, localTrack, newDownload, downloadClientItem));
+                    
                     importResults.Add(new ImportResult(importDecision, "Failed to import track, Permissions error"));
                 }
                 catch (Exception e)
